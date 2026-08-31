@@ -330,6 +330,10 @@ function workout() {
         🤔 Stuck? Get exercise help
       </button>
 
+      <button class="secondary" onclick="home()">
+        🏠 Back home
+      </button>
+
       <div class="spacer"></div>
 
     </section>
