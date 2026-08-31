@@ -1,1078 +1,1209 @@
 const state = {
-currentDay: Number(localStorage.getItem('alagaCurrentDay') || 1),
-totalWorkouts: Number(localStorage.getItem('alagaTotalWorkouts') || 0),
-pendingWorkout: localStorage.getItem('alagaPendingWorkout') === 'true'
+  currentDay: Number(localStorage.getItem("alagaCurrentDay") || 1),
+  totalWorkouts: Number(localStorage.getItem("alagaTotalWorkouts") || 0),
+  pendingWorkout: localStorage.getItem("alagaPendingWorkout") === "true"
 };
 
 const workouts = {
-1: {
-title: 'Glutes + Legs',
-exercises: [
-'Hip Thrust Machine',
-'Leg Press',
-'Seated Leg Curl',
-'Hip Abduction'
-]
-},
-2: {
-title: 'Upper + Glutes',
-exercises: [
-'Lat Pulldown',
-'Chest Press',
-'Seated Row',
-'Hip Abduction'
-]
-},
-3: {
-title: 'Thighs + Glutes',
-exercises: [
-'Leg Press',
-'Leg Extension',
-'Seated Leg Curl',
-'Hip Thrust Machine'
-]
-}
+  1: {
+    title: "Glutes + Legs",
+    exercises: [
+      "Hip Thrust Machine",
+      "Leg Press",
+      "Seated Leg Curl",
+      "Hip Abduction"
+    ]
+  },
+  2: {
+    title: "Upper + Glutes",
+    exercises: [
+      "Lat Pulldown",
+      "Chest Press",
+      "Seated Row",
+      "Hip Abduction"
+    ]
+  },
+  3: {
+    title: "Thighs + Glutes",
+    exercises: [
+      "Leg Press",
+      "Leg Extension",
+      "Seated Leg Curl",
+      "Hip Thrust Machine"
+    ]
+  }
 };
-
-/* =========================
-EXERCISE HELP DATA
-========================= */
 
 const exerciseHelpData = {
-'Hip Thrust Machine': {
-tutorial: 'https://youtu.be/VgAOV-xZM0k',
-alternative: 'Bodyweight Glute Bridge',
-alternativeTip: 'No equipment needed. Lie on your back, bend your knees, and gently lift your hips.'
-},
+  "Hip Thrust Machine": {
+    tutorial: "https://youtu.be/VgAOV-xZM0k",
+    alternative: "Bodyweight Glute Bridge",
+    alternativeTip:
+      "Lie on your back with your knees bent. Gently lift your hips, squeeze your glutes, then lower slowly."
+  },
 
-'Leg Press': {
-tutorial: 'https://youtube.com/shorts/EotSw18oR9w?si=RhPXb9ecnhCQkoEo',
-alternative: 'Sit-to-Stand from a Bench',
-alternativeTip: 'Sit on a stable bench, stand up with control, then sit back down slowly.'
-},
+  "Leg Press": {
+    tutorial: "https://youtube.com/shorts/EotSw18oR9w?si=RhPXb9ecnhCQkoEo",
+    alternative: "Sit-to-Stand from a Bench",
+    alternativeTip:
+      "Sit on a stable bench, stand up with control, then slowly sit back down."
+  },
 
-'Seated Leg Curl': {
-tutorial: 'https://youtube.com/shorts/xdbEG3xGLI8?si=nwcKKaMJ8pqZ4Zi3',
-alternative: 'Standing Bodyweight Hamstring Curl',
-alternativeTip: 'Hold onto something stable and slowly bring one heel toward your glute.'
-},
+  "Seated Leg Curl": {
+    tutorial: "https://youtube.com/shorts/xdbEG3xGLI8?si=nwcKKaMJ8pqZ4Zi3",
+    alternative: "Standing Bodyweight Hamstring Curl",
+    alternativeTip:
+      "Hold something stable and slowly bring one heel toward your glute. Switch sides."
+  },
 
-'Hip Abduction': {
-tutorial: 'https://youtube.com/shorts/DumWj7eUHwE?si=V3KETRtiOcZrSLQk',
-alternative: 'Side-Lying Hip Abduction',
-alternativeTip: 'Lie on your side and slowly raise your top leg. Keep the movement controlled.'
-},
+  "Hip Abduction": {
+    tutorial: "https://youtube.com/shorts/DumWj7eUHwE?si=V3KETRtiOcZrSLQk",
+    alternative: "Side-Lying Hip Abduction",
+    alternativeTip:
+      "Lie on your side and slowly raise your top leg. Keep the movement controlled."
+  },
 
-'Lat Pulldown': {
-tutorial: 'https://youtube.com/shorts/bNmvKpJSWKM?si=PwSxns6lK0SRZa0U',
-alternative: 'Come back later',
-alternativeTip: 'There is no universal no-equipment substitute that closely replaces this movement. It is okay to skip it for now and return later.'
-},
+  "Lat Pulldown": {
+    tutorial: "https://youtube.com/shorts/bNmvKpJSWKM?si=PwSxns6lK0SRZa0U",
+    alternative: "Come Back Later",
+    alternativeTip:
+      "It is okay to skip this exercise for now and return when the machine is available."
+  },
 
-'Chest Press': {
-tutorial: 'https://youtube.com/shorts/Qu7-ceCvq7w?si=-D2Fxhr-v7yGxm7X',
-alternative: 'Incline Wall Push-Up',
-alternativeTip: 'Place your hands on a wall or stable elevated surface and perform an easy, controlled push-up.'
-},
+  "Chest Press": {
+    tutorial: "https://youtube.com/shorts/Qu7-ceCvq7w?si=-D2Fxhr-v7yGxm7X",
+    alternative: "Incline Wall Push-Up",
+    alternativeTip:
+      "Place your hands on a wall or stable elevated surface. Keep your movement slow and controlled."
+  },
 
-'Seated Row': {
-tutorial: 'https://youtube.com/shorts/qD1WZ5pSuvk?si=Gm8oonH8Sp2kSbdq',
-alternative: 'Come back later',
-alternativeTip: 'There is no universal no-equipment substitute that closely replaces this movement. It is okay to skip it for now and return later.'
-},
+  "Seated Row": {
+    tutorial: "https://youtube.com/shorts/qD1WZ5pSuvk?si=Gm8oonH8Sp2kSbdq",
+    alternative: "Come Back Later",
+    alternativeTip:
+      "It is okay to skip this exercise for now and return when the machine is available."
+  },
 
-'Leg Extension': {
-tutorial: 'https://youtube.com/shorts/uM86QE59Tgc?si=LPOr2NMGQbOFsaJR',
-alternative: 'Seated Knee Extension',
-alternativeTip: 'Sit on a stable chair and slowly straighten one knee at a time without using added weight.'
-}
+  "Leg Extension": {
+    tutorial: "https://youtube.com/shorts/uM86QE59Tgc?si=LPOr2NMGQbOFsaJR",
+    alternative: "Seated Knee Extension",
+    alternativeTip:
+      "Sit on a stable chair and slowly straighten one knee at a time without added weight."
+  }
 };
 
-const app = document.getElementById('app');
-
-/* =========================
-SAVE DATA
-========================= */
+const app = document.getElementById("app");
 
 function save() {
-localStorage.setItem('alagaCurrentDay', state.currentDay);
-localStorage.setItem('alagaTotalWorkouts', state.totalWorkouts);
-localStorage.setItem('alagaPendingWorkout', state.pendingWorkout);
+  localStorage.setItem("alagaCurrentDay", state.currentDay);
+  localStorage.setItem("alagaTotalWorkouts", state.totalWorkouts);
+  localStorage.setItem("alagaPendingWorkout", state.pendingWorkout);
 }
 
-/* =========================
-WORKOUT CARD
-========================= */
-
 function workoutCard(day = state.currentDay) {
-const w = workouts[day];
+  const workout = workouts[day];
 
-return `     <div class="card">       <div class="kicker">Next workout</div>       <div class="workout-name">🍑 Day ${day} — ${w.title}</div>       <div class="meta">4 exercises • Beginner friendly</div>     </div>
+  return `
+    <div class="card">
+      <div class="kicker">Next workout</div>
+      <div class="workout-name">
+        🍑 Day ${day} — ${workout.title}
+      </div>
+      <div class="meta">
+        4 exercises • Beginner friendly
+      </div>
+    </div>
   `;
 }
 
 /* =========================
-HOME
+   HOME
 ========================= */
 
 function home() {
-if (state.pendingWorkout) return returnCheck();
+  if (state.pendingWorkout) {
+    return returnCheck();
+  }
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <div class="brand">
-    <h1>ALAGA</h1>
-    <p class="tagline">Balik Alindog, one day at a time.</p>
-  </div>
+      <div class="brand">
+        <h1>ALAGA</h1>
+        <p class="tagline">
+          Balik Alindog, one day at a time.
+        </p>
+      </div>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="center">
-    <div class="kicker">Made with love by Christian for Blessie 🩵</div>
-    <h2>How are you feeling?</h2>
-  </div>
+      <div class="center">
+        <div class="kicker">
+          Made with love by Christian for Blessie 🩵
+        </div>
 
-  <button class="choice" onclick="good()">
-    <strong>🟢 I feel good</strong>
-    <span>Let's train.</span>
-  </button>
+        <h2>How are you feeling?</h2>
+      </div>
 
-  <button class="choice" onclick="tired()">
-    <strong>🟡 I'm tired</strong>
-    <span>Let's keep it easy.</span>
-  </button>
+      <button class="choice" onclick="good()">
+        <strong>🟢 I feel good</strong>
+        <span>Let's train.</span>
+      </button>
 
-  <button class="choice" onclick="exhausted()">
-    <strong>🔴 I'm exhausted</strong>
-    <span>Rest is allowed.</span>
-  </button>
+      <button class="choice" onclick="tired()">
+        <strong>🟡 I'm tired</strong>
+        <span>Let's keep it easy.</span>
+      </button>
 
-  <button class="secondary" onclick="surprise()">
-    🎲 Surprise me
-  </button>
+      <button class="choice" onclick="exhausted()">
+        <strong>🔴 I'm exhausted</strong>
+        <span>Rest is allowed.</span>
+      </button>
 
-  <div class="footer-menu">
-    <button class="linkish" onclick="journey()">📈 Journey</button>
-    <button class="linkish" onclick="tutorials()">🎥 Tutorials</button>
-    <button class="linkish" onclick="settings()">⚙️ Settings</button>
-  </div>
+      <button class="secondary" onclick="surprise()">
+        🎲 Surprise me
+      </button>
 
-  <div class="spacer"></div>
+      <div class="footer-menu">
+        <button class="linkish" onclick="journey()">
+          📈 Journey
+        </button>
 
-</section>
-```
+        <button class="linkish" onclick="tutorials()">
+          🎥 Tutorials
+        </button>
 
-`;
+        <button class="linkish" onclick="settings()">
+          ⚙️ Settings
+        </button>
+      </div>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-GOOD
+   FEELING GOOD
 ========================= */
 
 function good() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Back</button>
+      <button class="back" onclick="home()">
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">Feeling good? 🩵</div>
-  <h2>Let's train.</h2>
+      <div class="kicker">
+        Feeling good? 🩵
+      </div>
 
-  ${workoutCard()}
+      <h2>Let's train.</h2>
 
-  <button class="primary" onclick="workout()">
-    🏋️ Start today's plan
-  </button>
+      ${workoutCard()}
 
-  <button class="secondary" onclick="cardio()">
-    ❤️ Add / do cardio instead
-  </button>
+      <button class="primary" onclick="workout()">
+        🏋️ Start today's plan
+      </button>
 
-  <div class="spacer"></div>
+      <button class="secondary" onclick="cardio()">
+        ❤️ Add / do cardio instead
+      </button>
 
-</section>
-```
+      <div class="spacer"></div>
 
-`;
+    </section>
+  `;
 }
 
 /* =========================
-TIRED
+   TIRED
 ========================= */
 
 function tired() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Back</button>
+      <button class="back" onclick="home()">
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">That's okay 🩵</div>
-  <h2>What sounds right?</h2>
+      <div class="kicker">
+        That's okay 🩵
+      </div>
 
-  <button class="choice" onclick="workout()">
-    <strong>🏋️ Just workout</strong>
-    <span>${workouts[state.currentDay].title}</span>
-  </button>
+      <h2>What sounds right?</h2>
 
-  <button class="choice" onclick="minimum()">
-    <strong>🪫 Do the minimum</strong>
-    <span>A shorter version still counts.</span>
-  </button>
+      <button class="choice" onclick="workout()">
+        <strong>🏋️ Just workout</strong>
+        <span>${workouts[state.currentDay].title}</span>
+      </button>
 
-  <button class="choice" onclick="cardio()">
-    <strong>❤️ Cardio only</strong>
-    <span>Move because you want to.</span>
-  </button>
+      <button class="choice" onclick="minimum()">
+        <strong>🪫 Do the minimum</strong>
+        <span>A shorter version still counts.</span>
+      </button>
 
-  <button class="choice" onclick="recovery()">
-    <strong>🌙 Recover</strong>
-    <span>No pressure today.</span>
-  </button>
+      <button class="choice" onclick="cardio()">
+        <strong>❤️ Cardio only</strong>
+        <span>Move because you want to.</span>
+      </button>
 
-  <div class="spacer"></div>
+      <button class="choice" onclick="recovery()">
+        <strong>🌙 Recover</strong>
+        <span>No pressure today.</span>
+      </button>
 
-</section>
-```
+      <div class="spacer"></div>
 
-`;
+    </section>
+  `;
 }
 
 /* =========================
-EXHAUSTED
+   EXHAUSTED
 ========================= */
 
 function exhausted() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Back</button>
+      <button class="back" onclick="home()">
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="center">
-    <div class="kicker">🩵 No pressure</div>
-    <h2>Rest today.</h2>
-    <p>Your workout isn't going anywhere.</p>
-  </div>
+      <div class="center">
+        <div class="kicker">
+          🩵 No pressure
+        </div>
 
-  <button class="primary" onclick="recovery()">
-    🌙 Recovery mode
-  </button>
+        <h2>Rest today.</h2>
 
-  <button class="secondary" onclick="home()">
-    🛌 I'll rest
-  </button>
+        <p>
+          Your workout isn't going anywhere.
+        </p>
+      </div>
 
-  <div class="spacer"></div>
+      <button class="primary" onclick="recovery()">
+        🌙 Recovery mode
+      </button>
 
-</section>
-```
+      <button class="secondary" onclick="home()">
+        🛌 I'll rest
+      </button>
 
-`;
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-TODAY'S WORKOUT
+   TODAY'S WORKOUT
 ========================= */
 
 function workout() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Home</button>
+      <button class="back" onclick="home()">
+        ← Home
+      </button>
 
-  <div class="kicker">Today's plan</div>
-  <h2>🍑 Day ${state.currentDay}</h2>
+      <div class="kicker">
+        Today's plan
+      </div>
 
-  ${workoutCard()}
+      <h2>
+        🍑 Day ${state.currentDay}
+      </h2>
 
-  <button class="primary" onclick="launchHevy()">
-    🏋️ Launch Hevy
-  </button>
+      ${workoutCard()}
 
-  <p class="tiny">
-    When you're finished, come back here 🩵
-  </p>
+      <button class="primary" onclick="launchHevy()">
+        🏋️ Launch Hevy
+      </button>
 
-  <button class="secondary" onclick="helpExercises()">
-    🤔 Stuck? Get exercise help
-  </button>
+      <p class="tiny">
+        When you're finished, come back here 🩵
+      </p>
 
-  <div class="spacer"></div>
+      <button class="secondary" onclick="helpExercises()">
+        🤔 Stuck? Get exercise help
+      </button>
 
-</section>
-```
+      <div class="spacer"></div>
 
-`;
+    </section>
+  `;
 }
 
 /* =========================
-LAUNCH HEVY
+   LAUNCH HEVY
 ========================= */
 
 function launchHevy() {
-state.pendingWorkout = true;
-save();
+  state.pendingWorkout = true;
+  save();
 
-alert(
-'Hevy launch link will be connected after we verify the correct iPhone deep-link behavior.'
-);
+  alert(
+    "Hevy launch link will be connected after we verify the correct iPhone deep-link behavior."
+  );
 
-workout();
+  workout();
 }
 
 /* =========================
-RETURN FROM HEVY
+   RETURN CHECK
 ========================= */
 
 function returnCheck() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="center">
-    <div class="kicker">Welcome back 🌸</div>
+      <div class="center">
 
-    <h2>Did you finish your workout?</h2>
+        <div class="kicker">
+          Welcome back 🌸
+        </div>
 
-    <p>
-      Your Day ${state.currentDay} workout is still open.
-    </p>
-  </div>
+        <h2>
+          Did you finish your workout?
+        </h2>
 
-  <button class="primary" onclick="completeWorkout()">
-    ✅ Yes, I finished
-  </button>
+        <p>
+          Your Day ${state.currentDay} workout is still open.
+        </p>
 
-  <button class="secondary" onclick="workout()">
-    ↩️ Not yet
-  </button>
+      </div>
 
-  <button class="secondary" onclick="helpExercises()">
-    🤔 I came back for help
-  </button>
+      <button class="primary" onclick="completeWorkout()">
+        ✅ Yes, I finished
+      </button>
 
-  <div class="spacer"></div>
+      <button class="secondary" onclick="workout()">
+        ↩️ Not yet
+      </button>
 
-</section>
-```
+      <button class="secondary" onclick="helpExercises()">
+        🤔 I came back for help
+      </button>
 
-`;
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-COMPLETE WORKOUT
+   COMPLETE WORKOUT
 ========================= */
 
 function completeWorkout() {
-state.totalWorkouts++;
+  const completedDay = state.currentDay;
 
-const completed = state.currentDay;
+  state.totalWorkouts++;
 
-state.currentDay =
-state.currentDay === 3
-? 1
-: state.currentDay + 1;
+  if (state.currentDay === 3) {
+    state.currentDay = 1;
+  } else {
+    state.currentDay++;
+  }
 
-state.pendingWorkout = false;
-save();
+  state.pendingWorkout = false;
+  save();
 
-const milestone =
-[1, 3, 5, 10, 20, 30, 50, 100]
-.includes(state.totalWorkouts)
-? `         <div class="card center">           <strong>🏆 ${state.totalWorkouts} workouts!</strong>           <p>Look how far you've come. 🩵</p>         </div>
-      `
-: '';
+  const milestoneNumbers = [
+    1,
+    3,
+    5,
+    10,
+    20,
+    30,
+    50,
+    100
+  ];
 
-app.innerHTML = ` <section class="screen">
+  const milestone = milestoneNumbers.includes(state.totalWorkouts)
+    ? `
+      <div class="card center">
+        <strong>
+          🏆 ${state.totalWorkouts} workouts!
+        </strong>
 
-```
-  <div class="spacer"></div>
+        <p>
+          Look how far you've come. 🩵
+        </p>
+      </div>
+    `
+    : "";
 
-  <div class="center">
+  app.innerHTML = `
+    <section class="screen">
 
-    <div class="kicker">🎉 Done!</div>
+      <div class="spacer"></div>
 
-    <h2>Day ${completed} complete.</h2>
+      <div class="center">
 
-    <p>
-      Next: Day ${state.currentDay}
-      — ${workouts[state.currentDay].title}
-    </p>
+        <div class="kicker">
+          🎉 Done!
+        </div>
 
-    ${milestone}
+        <h2>
+          Day ${completedDay} complete.
+        </h2>
 
-  </div>
+        <p>
+          Next: Day ${state.currentDay}
+          — ${workouts[state.currentDay].title}
+        </p>
 
-  <button class="primary" onclick="home()">
-    Back home 🩵
-  </button>
+        ${milestone}
 
-  <div class="spacer"></div>
+      </div>
 
-</section>
-```
+      <button class="primary" onclick="home()">
+        Back home 🩵
+      </button>
 
-`;
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-MINIMUM WORKOUT
+   MINIMUM WORKOUT
 ========================= */
 
 function minimum() {
-const w = workouts[state.currentDay];
+  const workoutToday = workouts[state.currentDay];
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="tired()">← Back</button>
+      <button class="back" onclick="tired()">
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">🪫 Low battery</div>
-  <h2>Do the minimum.</h2>
+      <div class="kicker">
+        🪫 Low battery
+      </div>
 
-  <div class="card">
-    <strong>${w.exercises[0]} — 2 sets</strong>
-    <br>
-    <strong>${w.exercises[1]} — 2 sets</strong>
-    <br>
-    <strong>${w.exercises[3]} — 2 sets</strong>
+      <h2>
+        Do the minimum.
+      </h2>
 
-    <p>That's enough. 🩵</p>
-  </div>
+      <div class="card">
 
-  <button class="primary" onclick="workout()">
-    🏋️ Continue
-  </button>
+        <strong>
+          ${workoutToday.exercises[0]} — 2 sets
+        </strong>
 
-  <div class="spacer"></div>
+        <br><br>
 
-</section>
-```
+        <strong>
+          ${workoutToday.exercises[1]} — 2 sets
+        </strong>
 
-`;
+        <br><br>
+
+        <strong>
+          ${workoutToday.exercises[3]} — 2 sets
+        </strong>
+
+        <p>
+          That's enough. 🩵
+        </p>
+
+      </div>
+
+      <button class="primary" onclick="workout()">
+        🏋️ Continue
+      </button>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-CARDIO
+   CARDIO
 ========================= */
 
 function cardio() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Back</button>
+      <button class="back" onclick="home()">
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">❤️ Cardio day</div>
-  <h2>Move how you like.</h2>
+      <div class="kicker">
+        ❤️ Cardio day
+      </div>
 
-  <button class="choice">
-    <strong>🚶 Treadmill</strong>
-    <span>Easy or moderate</span>
-  </button>
+      <h2>
+        Move how you like.
+      </h2>
 
-  <button class="choice">
-    <strong>⭕ Elliptical</strong>
-    <span>Low impact</span>
-  </button>
+      <button class="choice">
+        <strong>🚶 Treadmill</strong>
+        <span>Easy or moderate</span>
+      </button>
 
-  <button class="choice">
-    <strong>🚴 Bike</strong>
-    <span>Go at your pace</span>
-  </button>
+      <button class="choice">
+        <strong>⭕ Elliptical</strong>
+        <span>Low impact</span>
+      </button>
 
-  <p class="tiny">
-    20–40 min is a suggestion, not a requirement.
-  </p>
+      <button class="choice">
+        <strong>🚴 Bike</strong>
+        <span>Go at your pace</span>
+      </button>
 
-  <button class="secondary" onclick="home()">
-    Back home
-  </button>
+      <p class="tiny">
+        20–40 minutes is a suggestion, not a requirement.
+      </p>
 
-  <div class="spacer"></div>
+      <button class="secondary" onclick="home()">
+        Back home
+      </button>
 
-</section>
-```
+      <div class="spacer"></div>
 
-`;
+    </section>
+  `;
 }
 
 /* =========================
-RECOVERY
+   RECOVERY
 ========================= */
 
 function recovery() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">← Home</button>
+      <button class="back" onclick="home()">
+        ← Home
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">🌙 Recovery mode</div>
-  <h2>What sounds good?</h2>
+      <div class="kicker">
+        🌙 Recovery mode
+      </div>
 
-  <button class="choice" onclick="surprise('watch')">
-    <strong>🎬 Watch something</strong>
-  </button>
+      <h2>
+        What sounds good?
+      </h2>
 
-  <button class="choice" onclick="surprise('listen')">
-    <strong>🎵 Listen to something</strong>
-  </button>
+      <button class="choice" onclick="surprise('watch')">
+        <strong>🎬 Watch something</strong>
+      </button>
 
-  <button class="choice" onclick="surprise('move')">
-    <strong>🚶 Move a little</strong>
-  </button>
+      <button class="choice" onclick="surprise('listen')">
+        <strong>🎵 Listen to something</strong>
+      </button>
 
-  <button class="choice" onclick="surprise('fun')">
-    <strong>🎮 Something fun</strong>
-  </button>
+      <button class="choice" onclick="surprise('move')">
+        <strong>🚶 Move a little</strong>
+      </button>
 
-  <button class="choice" onclick="home()">
-    <strong>🛌 Do nothing</strong>
-    <span>That's allowed. 🩵</span>
-  </button>
+      <button class="choice" onclick="surprise('fun')">
+        <strong>🎮 Something fun</strong>
+      </button>
 
-  <button class="secondary" onclick="surprise()">
-    🎲 Surprise me
-  </button>
+      <button class="choice" onclick="home()">
+        <strong>🛌 Do nothing</strong>
+        <span>That's allowed. 🩵</span>
+      </button>
 
-  <div class="spacer"></div>
+      <button class="secondary" onclick="surprise()">
+        🎲 Surprise me
+      </button>
 
-</section>
-```
+      <div class="spacer"></div>
 
-`;
+    </section>
+  `;
 }
 
 /* =========================
-RANDOM PICKS
+   RANDOM PICKS
 ========================= */
 
 const picks = {
-watch: [
-'Try one easy episode of a comfort show.',
-'Pick a light movie and get cozy.'
-],
+  watch: [
+    "Try one easy episode of a comfort show.",
+    "Pick a light movie and get cozy."
+  ],
 
-listen: [
-'Put on a playlist you already love.',
-'AirPods in. No decisions. Just vibe.'
-],
+  listen: [
+    "Put on a playlist you already love.",
+    "AirPods in. No decisions. Just vibe."
+  ],
 
-move: [
-'Take a gentle 10-minute walk.',
-'Try 5 minutes of easy stretching.'
-],
+  move: [
+    "Take a gentle 10-minute walk.",
+    "Try 5 minutes of easy stretching."
+  ],
 
-fun: [
-'Play something low-effort and enjoyable.',
-'Call or message someone you love.'
-],
+  fun: [
+    "Play something low-effort and enjoyable.",
+    "Call or message someone you love."
+  ],
 
-any: [
-'🎬 Watch something comforting.',
-'🎵 Put on music and rest.',
-'🚶 Take a gentle walk.',
-'🛌 Do absolutely nothing.'
-]
+  any: [
+    "🎬 Watch something comforting.",
+    "🎵 Put on music and rest.",
+    "🚶 Take a gentle walk.",
+    "🛌 Do absolutely nothing."
+  ]
 };
 
-function surprise(type = 'any') {
-const pool = picks[type] || picks.any;
+function surprise(type = "any") {
+  const pool = picks[type] || picks.any;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
 
-const pick =
-pool[Math.floor(Math.random() * pool.length)];
+  app.innerHTML = `
+    <section class="screen">
 
-app.innerHTML = ` <section class="screen">
+      <button class="back" onclick="home()">
+        ← Back
+      </button>
 
-```
-  <button class="back" onclick="recovery()">← Back</button>
+      <div class="spacer"></div>
 
-  <div class="spacer"></div>
+      <div class="center">
 
-  <div class="center">
+        <div class="kicker">
+          🎲 Your random pick
+        </div>
 
-    <div class="kicker">🎲 Your random pick</div>
+        <h2>
+          ${pick}
+        </h2>
 
-    <h2>${pick}</h2>
+        <p>
+          No pressure. Just something for you. 🩵
+        </p>
 
-    <p>
-      No pressure. Just something for you. 🩵
-    </p>
+      </div>
 
-  </div>
+      <button class="primary" onclick="surprise('${type}')">
+        🎲 Another one
+      </button>
 
-  <button
-    class="primary"
-    onclick="surprise('${type}')"
-  >
-    🎲 Another one
-  </button>
+      <button class="secondary" onclick="home()">
+        Back home
+      </button>
 
-  <button class="secondary" onclick="home()">
-    Back home
-  </button>
+      <div class="spacer"></div>
 
-  <div class="spacer"></div>
-
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-EXERCISE HELP
+   EXERCISE HELP
 ========================= */
 
 function helpExercises() {
-const list = workouts[state.currentDay].exercises
-.map((exercise, index) => `       <button
-        class="choice"
-        onclick="exerciseHelp(${index})"       >         <strong>${exercise}</strong>         <span>Tap for help</span>       </button>
-    `)
-.join('');
+  const list = workouts[state.currentDay].exercises
+    .map((exercise, index) => {
+      return `
+        <button
+          class="choice"
+          onclick="exerciseHelp(${index})"
+        >
+          <strong>${exercise}</strong>
+          <span>Tap for help</span>
+        </button>
+      `;
+    })
+    .join("");
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="workout()">
-    ← Back to workout
-  </button>
+      <button class="back" onclick="workout()">
+        ← Back to workout
+      </button>
 
-  <div class="kicker">🤔 Stuck?</div>
+      <div class="kicker">
+        🤔 Stuck?
+      </div>
 
-  <h2>Which exercise?</h2>
+      <h2>
+        Which exercise?
+      </h2>
 
-  ${list}
+      ${list}
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 function exerciseHelp(index) {
-const exercise =
-workouts[state.currentDay].exercises[index];
+  const exercise = workouts[state.currentDay].exercises[index];
 
-const data = exerciseHelpData[exercise];
+  app.innerHTML = `
+    <section class="screen">
 
-app.innerHTML = ` <section class="screen">
+      <button class="back" onclick="helpExercises()">
+        ← Exercises
+      </button>
 
-```
-  <button class="back" onclick="helpExercises()">
-    ← Exercises
-  </button>
+      <div class="spacer"></div>
 
-  <div class="spacer"></div>
+      <div class="kicker">
+        Exercise help
+      </div>
 
-  <div class="kicker">Exercise help</div>
+      <h2>
+        ${exercise}
+      </h2>
 
-  <h2>${exercise}</h2>
+      <button
+        class="choice"
+        onclick="watchTutorial('${exercise}')"
+      >
+        <strong>🎥 I don't know how</strong>
+        <span>Watch the tutorial</span>
+      </button>
 
-  <button
-    class="choice"
-    onclick="watchTutorial('${exercise}')"
-  >
-    <strong>🎥 I don't know how</strong>
-    <span>Watch the tutorial</span>
-  </button>
+      <button
+        class="choice"
+        onclick="machineOccupied(${index})"
+      >
+        <strong>🚦 Machine is occupied</strong>
+        <span>No worries. You have options.</span>
+      </button>
 
-  <button
-    class="choice"
-    onclick="machineOccupied(${index})"
-  >
-    <strong>🚦 Machine is occupied</strong>
-    <span>No worries. You have options.</span>
-  </button>
+      <button
+        class="choice"
+        onclick="showAlternative('${exercise}')"
+      >
+        <strong>🔄 I need another exercise</strong>
+        <span>Show me a simple alternative</span>
+      </button>
 
-  <button
-    class="choice"
-    onclick="showAlternative('${exercise}')"
-  >
-    <strong>🔄 I need another exercise</strong>
-    <span>Show me a simple alternative</span>
-  </button>
+      <button
+        class="secondary"
+        onclick="somethingWrong()"
+      >
+        🚨 Something feels wrong
+      </button>
 
-  <button
-    class="danger"
-    onclick="somethingWrong()"
-  >
-    🚨 Something feels wrong
-  </button>
+      <button
+        class="secondary"
+        onclick="workout()"
+      >
+        Back to workout
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <button
-    class="secondary"
-    onclick="workout()"
-  >
-    Back to workout
-  </button>
-
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-WATCH TUTORIAL
+   TUTORIAL
 ========================= */
 
 function watchTutorial(exercise) {
-const url = exerciseHelpData[exercise].tutorial;
+  const url = exerciseHelpData[exercise].tutorial;
 
-window.open(
-url,
-'_blank',
-'noopener,noreferrer'
-);
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
 }
 
 /* =========================
-MACHINE OCCUPIED
+   MACHINE OCCUPIED
 ========================= */
 
 function machineOccupied(index) {
-const exercise =
-workouts[state.currentDay].exercises[index];
+  const exercise = workouts[state.currentDay].exercises[index];
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button
-    class="back"
-    onclick="exerciseHelp(${index})"
-  >
-    ← Back
-  </button>
+      <button
+        class="back"
+        onclick="exerciseHelp(${index})"
+      >
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">🚦 No worries</div>
+      <div class="kicker">
+        🚦 No worries
+      </div>
 
-  <h2>${exercise} is occupied.</h2>
+      <h2>
+        ${exercise} is occupied.
+      </h2>
 
-  <p>
-    What do you want to do?
-  </p>
+      <p>
+        What do you want to do?
+      </p>
 
-  <button
-    class="choice"
-    onclick="otherExercises(${index})"
-  >
-    <strong>➡️ Do another exercise first</strong>
-    <span>Keep going and come back later.</span>
-  </button>
+      <button
+        class="choice"
+        onclick="otherExercises(${index})"
+      >
+        <strong>➡️ Do another exercise first</strong>
+        <span>Keep going and come back later.</span>
+      </button>
 
-  <button
-    class="choice"
-    onclick="showAlternative('${exercise}')"
-  >
-    <strong>🔄 Try an alternative</strong>
-    <span>No waiting needed.</span>
-  </button>
+      <button
+        class="choice"
+        onclick="showAlternative('${exercise}')"
+      >
+        <strong>🔄 Try an alternative</strong>
+        <span>No waiting needed.</span>
+      </button>
 
-  <button
-    class="choice"
-    onclick="workout()"
-  >
-    <strong>↩️ Come back later</strong>
-    <span>Continue with Hevy when ready.</span>
-  </button>
+      <button
+        class="choice"
+        onclick="workout()"
+      >
+        <strong>↩️ Come back later</strong>
+        <span>Continue with your workout.</span>
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-OTHER EXERCISES
+   OTHER EXERCISES
 ========================= */
 
 function otherExercises(currentIndex) {
-const remainingExercises =
-workouts[state.currentDay].exercises
-.filter((exercise, index) => index !== currentIndex);
+  const remainingExercises = workouts[state.currentDay].exercises
+    .filter((exercise, index) => index !== currentIndex);
 
-const list =
-remainingExercises
-.map(exercise => `         <div class="card">           <strong>${exercise}</strong>         </div>
-      `)
-.join('');
+  const list = remainingExercises
+    .map(exercise => {
+      return `
+        <div class="card">
+          <strong>${exercise}</strong>
+        </div>
+      `;
+    })
+    .join("");
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button
-    class="back"
-    onclick="machineOccupied(${currentIndex})"
-  >
-    ← Back
-  </button>
+      <button
+        class="back"
+        onclick="machineOccupied(${currentIndex})"
+      >
+        ← Back
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">➡️ Keep going</div>
+      <div class="kicker">
+        ➡️ Keep going
+      </div>
 
-  <h2>Try another exercise first.</h2>
+      <h2>
+        Try another exercise first.
+      </h2>
 
-  ${list}
+      ${list}
 
-  <p class="tiny">
-    Come back to the occupied machine later. 🩵
-  </p>
+      <p class="tiny">
+        Come back to the occupied machine later. 🩵
+      </p>
 
-  <button
-    class="primary"
-    onclick="workout()"
-  >
-    Back to workout
-  </button>
+      <button
+        class="primary"
+        onclick="workout()"
+      >
+        Back to workout
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-UNIVERSAL ALTERNATIVE
+   ALTERNATIVE
 ========================= */
 
 function showAlternative(exercise) {
-const data = exerciseHelpData[exercise];
+  const data = exerciseHelpData[exercise];
 
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="helpExercises()">
-    ← Exercises
-  </button>
+      <button class="back" onclick="helpExercises()">
+        ← Exercises
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">🔄 Alternative</div>
+      <div class="kicker">
+        🔄 Alternative
+      </div>
 
-  <h2>${data.alternative}</h2>
+      <h2>
+        ${data.alternative}
+      </h2>
 
-  <div class="card">
-    <strong>Instead of:</strong>
-    <p>${exercise}</p>
+      <div class="card">
 
-    <strong>Quick guide:</strong>
-    <p>${data.alternativeTip}</p>
-  </div>
+        <strong>Instead of:</strong>
 
-  <p class="tiny">
-    Keep it easy and controlled. This is just an option, not a test. 🩵
-  </p>
+        <p>
+          ${exercise}
+        </p>
 
-  <button
-    class="primary"
-    onclick="workout()"
-  >
-    Back to workout
-  </button>
+        <strong>Quick guide:</strong>
 
-  <button
-    class="secondary"
-    onclick="helpExercises()"
-  >
-    Choose another exercise
-  </button>
+        <p>
+          ${data.alternativeTip}
+        </p>
 
-  <div class="spacer"></div>
+      </div>
 
-</section>
-```
+      <p class="tiny">
+        Keep it easy and controlled. This is just an option, not a test. 🩵
+      </p>
 
-`;
+      <button
+        class="primary"
+        onclick="workout()"
+      >
+        Back to workout
+      </button>
+
+      <button
+        class="secondary"
+        onclick="helpExercises()"
+      >
+        Choose another exercise
+      </button>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-SOMETHING FEELS WRONG
+   SOMETHING WRONG
 ========================= */
 
 function somethingWrong() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="center">
+      <div class="center">
 
-    <div class="kicker">🚨 Stop</div>
+        <div class="kicker">
+          🚨 Stop
+        </div>
 
-    <h2>Don't push through unusual pain.</h2>
+        <h2>
+          Don't push through unusual pain.
+        </h2>
 
-    <p>
-      Stop the exercise. Skip it or end the workout if needed.
-    </p>
+        <p>
+          Stop the exercise. Skip it or end the workout if needed.
+        </p>
 
-    <p class="tiny">
-      If you have severe, sudden, or concerning symptoms, seek appropriate medical help.
-    </p>
+        <p class="tiny">
+          If symptoms are severe, sudden, or concerning, seek appropriate medical help.
+        </p>
 
-  </div>
+      </div>
 
-  <button
-    class="primary"
-    onclick="workout()"
-  >
-    Back to workout
-  </button>
+      <button
+        class="primary"
+        onclick="workout()"
+      >
+        Back to workout
+      </button>
 
-  <button
-    class="secondary"
-    onclick="home()"
-  >
-    🏠 Go home
-  </button>
+      <button
+        class="secondary"
+        onclick="home()"
+      >
+        🏠 Go home
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-JOURNEY
+   JOURNEY
 ========================= */
 
 function journey() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">
-    ← Home
-  </button>
+      <button class="back" onclick="home()">
+        ← Home
+      </button>
 
-  <div class="kicker">Your journey</div>
+      <div class="kicker">
+        Your journey
+      </div>
 
-  <h2>${state.totalWorkouts} workouts 🩵</h2>
+      <h2>
+        ${state.totalWorkouts} workouts 🩵
+      </h2>
 
-  <div class="card">
+      <div class="card">
 
-    <strong>Next workout</strong>
+        <strong>
+          Next workout
+        </strong>
 
-    <p>
-      Day ${state.currentDay}
-      — ${workouts[state.currentDay].title}
-    </p>
+        <p>
+          Day ${state.currentDay}
+          — ${workouts[state.currentDay].title}
+        </p>
 
-  </div>
+      </div>
 
-  <p>
-    We celebrate what you've done.
-    We don't count failures.
-  </p>
+      <p>
+        We celebrate what you've done.
+        We don't count failures.
+      </p>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-TUTORIAL LIBRARY
+   TUTORIAL LIBRARY
 ========================= */
 
 function tutorials() {
-const uniqueExercises = Object.keys(exerciseHelpData);
+  const list = Object.keys(exerciseHelpData)
+    .map(exercise => {
+      return `
+        <button
+          class="choice"
+          onclick="watchTutorial('${exercise}')"
+        >
+          <strong>🎥 ${exercise}</strong>
+          <span>Watch tutorial</span>
+        </button>
+      `;
+    })
+    .join("");
 
-const list = uniqueExercises
-.map(exercise => `       <button
-        class="choice"
-        onclick="watchTutorial('${exercise}')"       >         <strong>🎥 ${exercise}</strong>         <span>Watch tutorial</span>       </button>
-    `)
-.join('');
+  app.innerHTML = `
+    <section class="screen">
 
-app.innerHTML = ` <section class="screen">
+      <button class="back" onclick="home()">
+        ← Home
+      </button>
 
-```
-  <button class="back" onclick="home()">
-    ← Home
-  </button>
+      <div class="kicker">
+        Tutorial library
+      </div>
 
-  <div class="kicker">Tutorial library</div>
+      <h2>
+        Learn before you go. 🩵
+      </h2>
 
-  <h2>Learn before you go. 🩵</h2>
+      ${list}
 
-  ${list}
+      <div class="spacer"></div>
 
-  <div class="spacer"></div>
-
-</section>
-```
-
-`;
+    </section>
+  `;
 }
 
 /* =========================
-SETTINGS
+   SETTINGS
 ========================= */
 
 function settings() {
-app.innerHTML = ` <section class="screen">
+  app.innerHTML = `
+    <section class="screen">
 
-```
-  <button class="back" onclick="home()">
-    ← Home
-  </button>
+      <button class="back" onclick="home()">
+        ← Home
+      </button>
 
-  <div class="spacer"></div>
+      <div class="spacer"></div>
 
-  <div class="kicker">Settings</div>
+      <div class="kicker">
+        Settings
+      </div>
 
-  <h2>ALAGA 🩵</h2>
+      <h2>
+        ALAGA 🩵
+      </h2>
 
-  <div class="card">
-    <strong>Your progress stays on this device.</strong>
+      <div class="card">
 
-    <p>
-      Current workout: Day ${state.currentDay}
-    </p>
+        <strong>
+          Your progress stays on this device.
+        </strong>
 
-    <p>
-      Completed workouts: ${state.totalWorkouts}
-    </p>
-  </div>
+        <p>
+          Current workout: Day ${state.currentDay}
+        </p>
 
-  <div class="spacer"></div>
+        <p>
+          Completed workouts: ${state.totalWorkouts}
+        </p>
 
-</section>
-```
+      </div>
 
-`;
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
-START APP
+   START APP
 ========================= */
 
 home();
