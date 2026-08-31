@@ -1,4 +1,3 @@
-```javascript
 const state = {
   currentDay: Number(localStorage.getItem('alagaCurrentDay') || 1),
   totalWorkouts: Number(localStorage.getItem('alagaTotalWorkouts') || 0),
@@ -1013,4 +1012,3 @@ function settings() {
 ========================= */
 
 home();
-```
