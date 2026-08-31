@@ -1,3 +1,4 @@
+```javascript
 const state = {
   currentDay: Number(localStorage.getItem('alagaCurrentDay') || 1),
   totalWorkouts: Number(localStorage.getItem('alagaTotalWorkouts') || 0),
@@ -35,6 +36,11 @@ const workouts = {
     ]
   }
 };
+
+
+/* =========================
+   APP
+========================= */
 
 const app = document.getElementById('app');
 
@@ -296,8 +302,6 @@ function exhausted() {
 
 function workout() {
 
-  const w = workouts[state.currentDay];
-
   app.innerHTML = `
     <section class="screen">
 
@@ -381,7 +385,7 @@ function changeMind() {
         <span>Rest and take care of yourself.</span>
       </button>
 
-      <button class="secondary" onclick="home()">
+      <button class="secondary" onclick="cancelWorkoutAndHome()">
         🏠 Back home
       </button>
 
@@ -389,6 +393,17 @@ function changeMind() {
 
     </section>
   `;
+}
+
+
+/* =========================
+   CANCEL WORKOUT + HOME
+========================= */
+
+function cancelWorkoutAndHome() {
+  state.pendingWorkout = false;
+  save();
+  home();
 }
 
 
@@ -428,7 +443,7 @@ function returnCheck() {
         </div>
 
         <h2>
-          Did you finish?
+          Did you finish your workout?
         </h2>
 
         <p>
@@ -549,7 +564,7 @@ function minimum() {
   app.innerHTML = `
     <section class="screen">
 
-      <button class="back" onclick="tired()">
+      <button class="back" onclick="home()">
         ← Back
       </button>
 
@@ -998,3 +1013,4 @@ function settings() {
 ========================= */
 
 home();
+```
