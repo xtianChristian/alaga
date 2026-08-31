@@ -1,0 +1,120 @@
+:root {
+  --bg: #f8fbff;
+  --surface: #ffffff;
+  --ink: #203044;
+  --muted: #708096;
+  --blue: #79b8f3;
+  --blue-soft: #e7f3ff;
+  --blue-deep: #397dbd;
+  --warm: #fff7f1;
+  --line: #e7edf4;
+  --danger: #e58a8a;
+  --shadow: 0 12px 35px rgba(45, 87, 125, .10);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+}
+button {
+  font: inherit;
+  border: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-shell {
+  width: min(100%, 540px);
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: calc(24px + env(safe-area-inset-top)) 20px calc(30px + env(safe-area-inset-bottom));
+}
+.screen {
+  min-height: calc(100vh - 54px);
+  display: flex;
+  flex-direction: column;
+}
+.brand {
+  text-align: center;
+  margin: 14px 0 32px;
+}
+.brand h1 {
+  margin: 0;
+  letter-spacing: .18em;
+  font-size: 1.45rem;
+}
+.tagline { color: var(--muted); margin: 8px 0 0; font-size: .92rem; }
+.kicker { color: var(--blue-deep); font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+h2 { font-size: 2rem; line-height: 1.12; margin: 10px 0; }
+p { color: var(--muted); line-height: 1.5; }
+.spacer { flex: 1; }
+
+.choice, .primary, .secondary, .danger {
+  width: 100%;
+  border-radius: 22px;
+  padding: 19px 18px;
+  margin: 9px 0;
+  text-align: left;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.choice:active, .primary:active, .secondary:active, .danger:active { transform: scale(.98); }
+.choice {
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+}
+.choice strong { display: block; font-size: 1.05rem; }
+.choice span { display: block; color: var(--muted); margin-top: 4px; font-size: .9rem; }
+.primary {
+  background: var(--blue);
+  color: #17324d;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 12px 28px rgba(121,184,243,.28);
+}
+.secondary {
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+  text-align: center;
+  font-weight: 750;
+}
+.danger {
+  background: #fff1f1;
+  color: #b95b5b;
+  text-align: center;
+  font-weight: 700;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  border-radius: 28px;
+  padding: 24px;
+  margin: 10px 0;
+}
+.workout-name { font-size: 1.5rem; font-weight: 800; margin: 6px 0; }
+.meta { color: var(--muted); font-size: .9rem; }
+.tiny { font-size: .82rem; text-align: center; margin-top: 10px; }
+.center { text-align: center; }
+.row { display: flex; gap: 10px; }
+.row button { flex: 1; }
+.back {
+  background: transparent;
+  color: var(--muted);
+  padding: 10px 0;
+  text-align: left;
+}
+.footer-menu {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+.linkish {
+  background: transparent;
+  color: var(--blue-deep);
+  padding: 8px;
+}
+.hidden { display: none !important; }

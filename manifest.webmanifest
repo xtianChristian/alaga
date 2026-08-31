@@ -1,0 +1,10 @@
+{
+  "name": "ALAGA",
+  "short_name": "ALAGA",
+  "description": "Balik Alindog, one day at a time.",
+  "display": "standalone",
+  "start_url": "./",
+  "background_color": "#f8fbff",
+  "theme_color": "#d9ecff",
+  "icons": []
+}
