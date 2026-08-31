@@ -106,9 +106,11 @@ function workoutCard(day = state.currentDay) {
   return `
     <div class="card">
       <div class="kicker">Next workout</div>
+
       <div class="workout-name">
         🍑 Day ${day} — ${workout.title}
       </div>
+
       <div class="meta">
         4 exercises • Beginner friendly
       </div>
@@ -130,6 +132,7 @@ function home() {
 
       <div class="brand">
         <h1>ALAGA</h1>
+
         <p class="tagline">
           Balik Alindog, one day at a time.
         </p>
@@ -328,8 +331,8 @@ function workout() {
 
       ${workoutCard()}
 
-      <button class="primary" onclick="launchHevy()">
-        🏋️ Launch Hevy
+      <button class="primary" onclick="hevyTransition()">
+        🏋️ I'm ready — let's go
       </button>
 
       <p class="tiny">
@@ -347,18 +350,104 @@ function workout() {
 }
 
 /* =========================
-   LAUNCH HEVY
+   HEVY TRANSITION
 ========================= */
 
-function launchHevy() {
+function hevyTransition() {
+  const workoutToday = workouts[state.currentDay];
+
+  app.innerHTML = `
+    <section class="screen">
+
+      <button class="back" onclick="workout()">
+        ← Change my mind
+      </button>
+
+      <div class="spacer"></div>
+
+      <div class="center">
+
+        <div class="kicker">
+          🏋️ You're ready.
+        </div>
+
+        <h2>
+          Day ${state.currentDay} — ${workoutToday.title}
+        </h2>
+
+        <p>
+          Open Hevy on whichever device is easiest for you.
+        </p>
+
+        <div class="card">
+
+          <strong>
+            Choose this routine in Hevy:
+          </strong>
+
+          <p>
+            🏋️ Day ${state.currentDay} — ${workoutToday.title}
+          </p>
+
+        </div>
+
+        <p class="tiny">
+          You can start Hevy from your iPhone or Apple Watch. 🩵
+        </p>
+
+      </div>
+
+      <button class="primary" onclick="startHevyManually()">
+        🩵 Got it — I'll start Hevy
+      </button>
+
+      <button class="secondary" onclick="helpExercises()">
+        🤔 I need exercise help first
+      </button>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
+}
+
+function startHevyManually() {
   state.pendingWorkout = true;
   save();
 
-  alert(
-    "Hevy launch link will be connected after we verify the correct iPhone deep-link behavior."
-  );
+  app.innerHTML = `
+    <section class="screen">
 
-  workout();
+      <div class="spacer"></div>
+
+      <div class="center">
+
+        <div class="kicker">
+          🩵 You're all set.
+        </div>
+
+        <h2>
+          Have a good workout.
+        </h2>
+
+        <p>
+          Start Hevy whenever you're ready.
+        </p>
+
+        <p>
+          We'll be right here when you're done. 🩵
+        </p>
+
+      </div>
+
+      <button class="secondary" onclick="helpExercises()">
+        🤔 I need exercise help
+      </button>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
 }
 
 /* =========================
