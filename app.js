@@ -1295,4 +1295,21 @@ function settings() {
    START APP
 ========================= */
 
+/* =========================
+   RETURN FROM HEVY DETECTION
+========================= */
+
+document.addEventListener("visibilitychange", () => {
+  if (
+    document.visibilityState === "visible" &&
+    state.pendingWorkout
+  ) {
+    returnCheck();
+  }
+});
+
+/* =========================
+   START APP
+========================= */
+
 home();
