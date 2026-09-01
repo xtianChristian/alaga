@@ -92,6 +92,72 @@ const exerciseHelpData = {
   }
 };
 
+const milestones = {
+  1: {
+    title: "You started.",
+    messages: [
+      "That's a big deal. Every journey begins somewhere. 🩵",
+      "You showed up for yourself. That's where everything starts. 🩵"
+    ]
+  },
+
+  3: {
+    title: "Three workouts.",
+    messages: [
+      "You're building something, one day at a time. 🩵",
+      "Three times you chose to show up for yourself. Keep going. 🩵"
+    ]
+  },
+
+  5: {
+    title: "Five workouts!",
+    messages: [
+      "Five times you chose yourself. That matters. 🩵",
+      "Little by little, you're building your way back. 🩵"
+    ]
+  },
+
+  10: {
+    title: "Double digits!",
+    messages: [
+      "Ten workouts. Look at you. 🩵",
+      "Ten times you showed up for yourself. That's progress. 🩵"
+    ]
+  },
+
+  20: {
+    title: "Twenty workouts.",
+    messages: [
+      "One day at a time really adds up. 🩵",
+      "Twenty workouts ago, this was just something you decided to begin. Look at you now. 🩵"
+    ]
+  },
+
+  30: {
+    title: "Thirty workouts!",
+    messages: [
+      "This is becoming part of your life. 🩵",
+      "You're no longer just starting. You're building a habit of showing up for yourself. 🩵"
+    ]
+  },
+
+  50: {
+    title: "Fifty workouts.",
+    messages: [
+      "Christian is incredibly proud of you. 🩵",
+      "Fifty times you chose to show up. I hope you're proud of yourself too. 🩵"
+    ]
+  },
+
+  100: {
+    title: "ONE HUNDRED WORKOUTS!",
+    messages: [
+      "Look how far you've come. Seriously. 🩵",
+      "One hundred times you showed up for yourself. That's something beautiful. 🩵"
+    ]
+  }
+};
+
 const app = document.getElementById("app");
 
 function save() {
@@ -512,31 +578,14 @@ function completeWorkout() {
   state.pendingWorkout = false;
   save();
 
-  const milestoneNumbers = [
-    1,
-    3,
-    5,
-    10,
-    20,
-    30,
-    50,
-    100
-  ];
+  if (milestones[state.totalWorkouts]) {
+    return showMilestone(completedDay);
+  }
 
-  const milestone = milestoneNumbers.includes(state.totalWorkouts)
-    ? `
-      <div class="card center">
-        <strong>
-          🏆 ${state.totalWorkouts} workouts!
-        </strong>
+  showCompletion(completedDay);
+}
 
-        <p>
-          Look how far you've come. 🩵
-        </p>
-      </div>
-    `
-    : "";
-
+function showCompletion(completedDay) {
   app.innerHTML = `
     <section class="screen">
 
@@ -557,12 +606,65 @@ function completeWorkout() {
           — ${workouts[state.currentDay].title}
         </p>
 
-        ${milestone}
-
       </div>
 
       <button class="primary" onclick="home()">
         Back home 🩵
+      </button>
+
+      <div class="spacer"></div>
+
+    </section>
+  `;
+}
+
+/* =========================
+   MILESTONE CELEBRATION
+========================= */
+
+function showMilestone(completedDay) {
+  const milestone = milestones[state.totalWorkouts];
+
+  const message =
+    milestone.messages[
+      Math.floor(Math.random() * milestone.messages.length)
+    ];
+
+  app.innerHTML = `
+    <section class="screen">
+
+      <div class="spacer"></div>
+
+      <div class="center">
+
+        <div class="kicker">
+          🏆 MILESTONE
+        </div>
+
+        <h2>
+          ${state.totalWorkouts} WORKOUT${state.totalWorkouts === 1 ? "" : "S"}
+        </h2>
+
+        <div class="card center">
+
+          <strong>
+            ${milestone.title}
+          </strong>
+
+          <p>
+            ${message}
+          </p>
+
+        </div>
+
+        <p class="tiny">
+          Day ${completedDay} is officially done. 🩵
+        </p>
+
+      </div>
+
+      <button class="primary" onclick="home()">
+        Celebrate later — back home 🩵
       </button>
 
       <div class="spacer"></div>
@@ -1166,6 +1268,49 @@ function somethingWrong() {
 ========================= */
 
 function journey() {
+  const milestoneNumbers = Object.keys(milestones)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  const nextMilestone = milestoneNumbers.find(
+    number => number > state.totalWorkouts
+  );
+
+  let milestoneSection = "";
+
+  if (nextMilestone) {
+    const remaining =
+      nextMilestone - state.totalWorkouts;
+
+    milestoneSection = `
+      <div class="card">
+
+        <strong>
+          🏆 Next milestone: ${nextMilestone} workouts
+        </strong>
+
+        <p>
+          ${remaining} more at your own pace. 🩵
+        </p>
+
+      </div>
+    `;
+  } else {
+    milestoneSection = `
+      <div class="card">
+
+        <strong>
+          🏆 You've reached every current milestone.
+        </strong>
+
+        <p>
+          Look how far you've come. 🩵
+        </p>
+
+      </div>
+    `;
+  }
+
   app.innerHTML = `
     <section class="screen">
 
@@ -1178,7 +1323,7 @@ function journey() {
       </div>
 
       <h2>
-        ${state.totalWorkouts} workouts 🩵
+        🏆 ${state.totalWorkouts} workout${state.totalWorkouts === 1 ? "" : "s"} completed
       </h2>
 
       <div class="card">
@@ -1194,7 +1339,9 @@ function journey() {
 
       </div>
 
-      <p>
+      ${milestoneSection}
+
+      <p class="tiny">
         We celebrate what you've done.
         We don't count failures.
       </p>
@@ -1290,10 +1437,6 @@ function settings() {
     </section>
   `;
 }
-
-/* =========================
-   START APP
-========================= */
 
 /* =========================
    RETURN FROM HEVY DETECTION
