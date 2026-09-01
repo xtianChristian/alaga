@@ -1,4 +1,70 @@
-const CACHE = 'alaga-v1';
-const ASSETS = ['./','./index.html','./style.css','./app.js','./manifest.webmanifest'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
-self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+const CACHE = "alaga-v2";
+
+
+const ASSETS = [
+
+  "./",
+
+  "./index.html",
+
+  "./style.css",
+
+  "./app.js",
+
+  "./manifest.webmanifest",
+
+  "./apple-touch-icon.png",
+
+  "./favicon-32.png",
+
+  "./icon-192.png",
+
+  "./icon-512.png"
+
+];
+
+
+
+self.addEventListener(
+  "install",
+
+  event =>
+
+    event.waitUntil(
+
+      caches
+        .open(CACHE)
+
+        .then(
+          cache =>
+            cache.addAll(ASSETS)
+        )
+
+    )
+
+);
+
+
+
+self.addEventListener(
+  "fetch",
+
+  event =>
+
+    event.respondWith(
+
+      caches
+        .match(event.request)
+
+        .then(
+
+          response =>
+
+            response ||
+            fetch(event.request)
+
+        )
+
+    )
+
+);
