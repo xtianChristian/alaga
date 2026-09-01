@@ -1,3 +1,4 @@
+```javascript
 /* =========================
    ALAGA CONTENT API
 ========================= */
@@ -141,35 +142,40 @@ const fallbackContent = {
       Category: "Happy",
       Song: "Put on a song that makes you smile.",
       Artist: "",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Motivation",
       Song: "Play something that makes you feel unstoppable.",
       Artist: "",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
       Song: "Put on something calm and take a breath.",
       Artist: "",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Love",
       Song: "Play a song that reminds you of us.",
       Artist: "",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Wedding",
       Song: "Listen to something that makes you excited for our future.",
       Artist: "",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     }
   ],
 
@@ -178,31 +184,36 @@ const fallbackContent = {
     {
       Category: "Happy",
       Suggestion: "Watch something light and funny.",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Motivation",
       Suggestion: "Watch something that inspires you.",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
       Suggestion: "Watch a comfort show and relax.",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Love",
       Suggestion: "Watch something that makes you feel close to the people you love.",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     },
 
     {
       Category: "Wedding",
       Suggestion: "Spend a little time imagining our future together.",
-      Link: ""
+      Link: "",
+      IsChristianPick: false
     }
   ],
 
@@ -210,37 +221,44 @@ const fallbackContent = {
   Recovery: [
     {
       Category: "Happy",
-      Suggestion: "Take a gentle walk and enjoy the music around you."
+      Suggestion: "Take a gentle walk and enjoy the music around you.",
+      IsChristianPick: false
     },
 
     {
       Category: "Motivation",
-      Suggestion: "Do something small today that your future self will appreciate."
+      Suggestion: "Do something small today that your future self will appreciate.",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
-      Suggestion: "Take a warm shower and let yourself slow down."
+      Suggestion: "Take a warm shower and let yourself slow down.",
+      IsChristianPick: false
     },
 
     {
       Category: "Love",
-      Suggestion: "Call or message someone you love."
+      Suggestion: "Call or message someone you love.",
+      IsChristianPick: false
     },
 
     {
       Category: "Wedding",
-      Suggestion: "Take a moment to imagine yourself feeling confident and happy on our wedding day."
+      Suggestion: "Take a moment to imagine yourself feeling confident and happy on our wedding day.",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
-      Suggestion: "Try five minutes of gentle stretching."
+      Suggestion: "Try five minutes of gentle stretching.",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
-      Suggestion: "Take a guilt-free nap if your body needs it."
+      Suggestion: "Take a guilt-free nap if your body needs it.",
+      IsChristianPick: false
     }
   ],
 
@@ -248,27 +266,32 @@ const fallbackContent = {
   Fun: [
     {
       Category: "Happy",
-      Suggestion: "Do something silly just because it makes you laugh."
+      Suggestion: "Do something silly just because it makes you laugh.",
+      IsChristianPick: false
     },
 
     {
       Category: "Motivation",
-      Suggestion: "Spend a few minutes doing something you've been putting off."
+      Suggestion: "Spend a few minutes doing something you've been putting off.",
+      IsChristianPick: false
     },
 
     {
       Category: "Relax",
-      Suggestion: "Get cozy and do absolutely nothing for a while."
+      Suggestion: "Get cozy and do absolutely nothing for a while.",
+      IsChristianPick: false
     },
 
     {
       Category: "Love",
-      Suggestion: "Send a sweet message to someone you care about."
+      Suggestion: "Send a sweet message to someone you care about.",
+      IsChristianPick: false
     },
 
     {
       Category: "Wedding",
-      Suggestion: "Save one little idea for something you'd love at our wedding."
+      Suggestion: "Save one little idea for something you'd love at our wedding.",
+      IsChristianPick: false
     }
   ],
 
@@ -1511,7 +1534,10 @@ function getRandomSurprise(type = "any") {
       icon: "🎵",
       title: item.Song || "Listen to something you enjoy.",
       subtitle: item.Artist || "",
-      link: item.Link || ""
+      link: item.Link || "",
+      isChristianPick:
+        String(item.IsChristianPick || "")
+          .toLowerCase() === "true"
     };
   }
 
@@ -1525,9 +1551,14 @@ function getRandomSurprise(type = "any") {
 
     return {
       icon: "🎬",
-      title: item.Suggestion || "Watch something comforting.",
+      title:
+        item.Suggestion ||
+        "Watch something comforting.",
       subtitle: "",
-      link: item.Link || ""
+      link: item.Link || "",
+      isChristianPick:
+        String(item.IsChristianPick || "")
+          .toLowerCase() === "true"
     };
   }
 
@@ -1545,7 +1576,10 @@ function getRandomSurprise(type = "any") {
         item.Suggestion ||
         "Take a moment to slow down.",
       subtitle: "",
-      link: ""
+      link: "",
+      isChristianPick:
+        String(item.IsChristianPick || "")
+          .toLowerCase() === "true"
     };
   }
 
@@ -1563,7 +1597,10 @@ function getRandomSurprise(type = "any") {
         item.Suggestion ||
         "Do something enjoyable.",
       subtitle: "",
-      link: ""
+      link: "",
+      isChristianPick:
+        String(item.IsChristianPick || "")
+          .toLowerCase() === "true"
     };
   }
 
@@ -1595,6 +1632,16 @@ function surprise(type = "any") {
   if (!pick) {
     return home();
   }
+
+
+  const christianPickBadge =
+    pick.isChristianPick
+      ? `
+        <div class="christian-pick">
+          🩵 Christian's Pick
+        </div>
+      `
+      : "";
 
 
   const openButton =
@@ -1631,6 +1678,9 @@ function surprise(type = "any") {
         </div>
 
 
+        ${christianPickBadge}
+
+
         <h2>
           ${pick.icon} ${pick.title}
         </h2>
@@ -1644,7 +1694,11 @@ function surprise(type = "any") {
 
 
         <p>
-          No pressure. Just something for you. 🩵
+          ${
+            pick.isChristianPick
+              ? "Christian picked this one especially for you. 🩵"
+              : "No pressure. Just something for you. 🩵"
+          }
         </p>
 
       </div>
@@ -2382,3 +2436,4 @@ home();
 ========================= */
 
 loadContent();
+```
